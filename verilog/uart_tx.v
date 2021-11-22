@@ -28,12 +28,12 @@ parameter TX_DATA_BITS	= 3'b010;
 parameter TX_STOP_BIT	= 3'b011;
 parameter CLEANUP		= 3'b100;
 
-reg [2:0] r_SM_Main		= 0;
-reg [7:0] r_Clock_Count	= 0;
-reg [2:0] r_Bit_Index	= 0;
-reg [7:0] r_TX_Data		= 0;
-reg		r_TX_Done		= 0;
-reg		r_TX_Active		= 0;
+reg [2:0]	r_SM_Main		= 0;
+reg [9:0]	r_Clock_Count	= 0;
+reg [2:0]	r_Bit_Index		= 0;
+reg [7:0]	r_TX_Data		= 0;
+reg			r_TX_Done		= 0;
+reg			r_TX_Active		= 0;
 
 always @(posedge i_Clock) begin
 	case (r_SM_Main)
@@ -77,7 +77,7 @@ always @(posedge i_Clock) begin
 				r_Clock_Count <= 0;
 				// Check if we have sent out all bits
 				if (r_Bit_Index < 7) begin
-					r_Bit_Index <= r_Bit_Index + 1;
+					r_Bit_Index <= r_Bit_Index + 3'd1;
 					r_SM_Main <= TX_DATA_BITS;
 				end else begin
 					r_Bit_Index <= 0;
@@ -91,7 +91,7 @@ always @(posedge i_Clock) begin
 
 			// Wait CLKS_PER_BIT-1 clock cycles for Stop bit to finish
 			if (r_Clock_Count < CLKS_PER_BIT-1) begin
-				r_Clock_Counti <= r_Clock_Count + 8'd1;
+				r_Clock_Count <= r_Clock_Count + 8'd1;
 				r_SM_Main <= TX_STOP_BIT;
 			end else begin
 				r_TX_Done		<= 1'b1;
