@@ -31,28 +31,28 @@ module RGMIIulator_top(
 	input		[3:0]rgm0_d
 );
 
-localparam IDLE			= 3'b001;
-localparam PUTCHR		= 3'b010;
-localparam WAIT			= 3'b100;
-reg [2:0] state = IDLE;
+localparam INIT			= 4'b0001;
+localparam IDLE			= 4'b0010;
+localparam PUTCHR		= 4'b0100;
+localparam WAIT			= 4'b1000;
+reg [3:0] state = INIT;
+reg [3:0] sstate = 0;
+
 
 wire reset;
 reg uart_dv = 0;
 reg [7:0] uart_cout = 0;
-reg [31:0] count;
+reg [31:0] count = 0;
 reg [9:0] bptr = 0;
-reg [7:0] RAM [0:664];
+reg [7:0] RAM [0:666];
 
 
 assign reset = ~SW0;
-assign LED = {count[26:22], state};
+assign LED = {sstate, state}; //{count[26:23], state};
 
 integer i;
 initial begin
-	$readmemh("screen.hex", RAM, 0, 664);
-	for (i=0; i < 664; i=i+1) begin
-		//$display("RAM[%d] = %h", i, RAM[i]);
-	end
+	$readmemh("screen.hex", RAM, 0, 666);
 end
 
 uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
@@ -66,33 +66,30 @@ uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
 always @(posedge clk)
 	if (reset) begin
 		uart_dv <= 0;
-		count <= 0;
+		count = 0;
 		bptr <= 0;
-		state <= IDLE;
+		state <= INIT;
+		sstate <= 0;
 	end else begin
 		case (state)
-			IDLE : begin
-				if (!uart_active)
-					state <= PUTCHR;
-			end // IDLE
-			PUTCHR : begin
-				uart_cout <= RAM[bptr];
-				uart_dv <= 1;
-				count <= 0;
-				state <= WAIT;
-			end // PUTCHR
-			WAIT : begin
-				uart_dv <= 0;
-				if (count[21]) begin // wait for a while
-					if (bptr == 10'd664)
-						bptr <= 0;
-					else
-						bptr <= bptr + 10'd1;
+			INIT : begin
+				if (bptr == 667)
 					state <= IDLE;
+				uart_cout <= RAM[bptr];
+				if (uart_active) begin
+					uart_dv <= 0;
+					count = 0;
+				end else begin
+					if (count == 32'd5)
+						bptr <= bptr + 1;
+					if (count == 32'd10)
+						uart_dv <= 1;
 				end
-			end // WAIT
+			end // INIT
+			IDLE : begin
+			end // IDLE
 		endcase
-		count <= count + 1;
+		count = count + 1;
 	end
 
 endmodule

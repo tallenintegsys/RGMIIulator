@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo -en " \r\n";
 echo -en "\e[4m"
 echo -en "                                 RGMIulator                                     \r\n"
 echo -en "\e[0m"
