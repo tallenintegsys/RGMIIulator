@@ -22,11 +22,11 @@ module uart_tx #(parameter CLKS_PER_BIT = 217) (
 	output      o_TX_Done
 );
 
-parameter IDLE			= 3'b000;
-parameter TX_START_BIT	= 3'b001;
-parameter TX_DATA_BITS	= 3'b010;
-parameter TX_STOP_BIT	= 3'b011;
-parameter CLEANUP		= 3'b100;
+localparam IDLE			= 3'b000;
+localparam TX_START_BIT	= 3'b001;
+localparam TX_DATA_BITS	= 3'b010;
+localparam TX_STOP_BIT	= 3'b011;
+localparam CLEANUP		= 3'b100;
 
 reg [2:0]	r_SM_Main		= 0;
 reg [9:0]	r_Clock_Count	= 0;
