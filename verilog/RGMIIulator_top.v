@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -17,8 +18,6 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-`timescale 1ns / 1ps
-`include "uart_tx.v"
 
 module RGMIIulator_top(
 	input		clk,
@@ -40,6 +39,7 @@ reg [3:0] state = INIT;
 wire reset;
 reg uart_dv = 0;
 reg [7:0] uart_cout = 0;
+wire uart_active;
 reg [29:0] count = 0;
 reg [9:0] bptr = 0;			// char ptr
 reg [7:0] RAM [0:1023];		// serial header
@@ -60,7 +60,7 @@ assign reset = ~SW0;
 assign LED = {count[26:23], error, state};
 
 initial begin
-	$readmemh("screen.hex", RAM, 0, 666);
+	$readmemh("verilog/screen.hex", RAM, 0, 666);
 	hex[4'h0] = "0";
 	hex[4'h1] = "1";
 	hex[4'h2] = "2";
@@ -119,7 +119,7 @@ always @(posedge clk) begin
 				end
 			end // IDLE
 			ASSEMBLE : begin
-				line <= FIFO[pktsout];
+				//line <= FIFO[pktsout];
 				bcount = bcount + 1;
 				if (bcount == 63) begin
 					count = 0;
