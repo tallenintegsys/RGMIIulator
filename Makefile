@@ -3,8 +3,8 @@ VFLAGS= -Wall -g2005
 
 RGMIIulator: verilog/RGMIIulator_tb.v verilog/RGMIIulator_top.v verilog/uart_tx.v
 	iverilog $(VFLAGS) -Iverilog -o $@ $^
-	./$@
-	rm $@
+	@./$@
+	@rm $@
 
 
 .PHONY: xst ngdbuild map par trce bitgen sim program clean
