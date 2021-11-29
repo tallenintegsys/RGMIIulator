@@ -52,6 +52,7 @@ initial begin
 	#0	SW0 = 0;
 	#5	SW0 = 1;
 	#10;
+	//start of packet
 	rgm0_en = 1;
 	//preamble
 	for (i=0; i<15; i=i+1)
@@ -104,8 +105,10 @@ initial begin
 	#40 rgm0_d = {crc[12],crc[13],crc[14],crc[15]};
 	#40 rgm0_d = {crc[0],crc[1],crc[2],crc[3]};
 	#40 rgm0_d = {crc[4],crc[5],crc[6],crc[7]};
+	//end of packet
+	rgm0_en = 0;
 	//we're done
-	#100	$finish;
+	#500000	$finish;
 end
 
 always #10 clk = !clk;
