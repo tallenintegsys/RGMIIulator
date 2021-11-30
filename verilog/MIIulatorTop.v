@@ -79,46 +79,13 @@ always @(posedge clk) begin
 		fifout <= 0;
 		error <= 0;
 	end else begin
+		uart_cout <= FIFO[fifout];
 		if (fifoin != fifout) begin
 			if (uart_active) begin
-				uart_cout <= FIFO[fifout];
+				uart_dv <= 0;
 			end else begin
 				fifout <= fifout + 1;
 				uart_dv <= 1;
-			end
-		end
-	end
-end
-
-always @(posedge rgm0_clk) begin
-	if (reset) begin
-		fifoin <= 0;
-		nibble <= 0;
-	end else begin
-		if (rgm0_en) begin	// begin RXing frame
-			if (nibble == 0) begin	// low order nibble
-				FIFO[fifoin][0] <= rgm0_d[0];
-				FIFO[fifoin][1] <= rgm0_d[1];
-				FIFO[fifoin][2] <= rgm0_d[2];
-				FIFO[fifoin][3] <= rgm0_d[3];
-				nibble <= 1;
-			end else begin			// high order nibble
-				FIFO[fifoin][4] <= rgm0_d[0];
-				FIFO[fifoin][5] <= rgm0_d[1];
-				FIFO[fifoin][6] <= rgm0_d[2];
-				FIFO[fifoin][7] <= rgm0_d[3];
-				nibble <= 0;
-				fifoin <= fifoin + 1;
-			end
-		end else begin	// end of frame
-			if (nibble == 1) begin
-				FIFO[fifoin][4] <= 0;
-				FIFO[fifoin][5] <= 0;
-				FIFO[fifoin][6] <= 0;
-				FIFO[fifoin][7] <= 0;
-				nibble <= 0;
-				fifoin <= fifoin + 1;
-				error = 1;
 			end
 		end
 	end
