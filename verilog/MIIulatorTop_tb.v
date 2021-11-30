@@ -21,21 +21,12 @@
 module RGMIIulator_tb;
 reg		clk				= 0;
 reg		SW0				= 0;
-reg		uart_rx;
-wire	uart_tx			= 0;
+reg		uart_rx_serial;
+wire	uart_tx_serial;
 wire	[7:0]LED		= 8'b00000000;
 reg		mii0_en			= 0;
 reg		mii0_clk		= 0;
 reg		[0:3] mii0_d	= 4'b0000;
-wire		d3;
-wire		d2;
-wire		d1;
-wire		d0;
-
-assign	d3 = mii0_d[3];
-assign	d2 = mii0_d[2];
-assign	d1 = mii0_d[1];
-assign	d0 = mii0_d[0];
 
 localparam dst = 48'h54_ff_01_21_23_24;
 localparam src = 48'h12_34_56_78_9a_bc;
@@ -127,7 +118,7 @@ MIIulatorTop uut(
 	.clk(clk),
 	.SW0(SW0),
 	.uart_rx(uart_rx),
-	.uart_tx(uart_tx),
+	.uart_tx_serial(uart_tx_serial),
 	.LED(LED),
 	.mii0_en(mii0_en),
 	.mii0_clk(mii0_clk),

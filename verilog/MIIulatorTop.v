@@ -23,7 +23,7 @@ module MIIulatorTop(
 	input		clk,
 	input		SW0,
 	input		uart_rx,
-	output		uart_tx,
+	output		uart_tx_serial,
 	output 		[7:0]LED,
 	input		mii0_en,
 	input		mii0_clk,
@@ -41,7 +41,6 @@ wire uart_active;
 reg [7:0] fifo [0:63];
 reg [5:0] inptr = 0;
 reg [5:0] outptr = 0;
-
 
 reg [7:0] hex [0:15];
 
@@ -109,7 +108,7 @@ uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
 	.i_TX_DV(uart_dv),			// start sending the bits
 	.i_TX_Byte(uart_d),		// char to send
 	.o_TX_Active(uart_active),
-	.o_TX_Serial(uart_tx),
+	.o_TX_Serial(uart_tx_serial),
 	.o_TX_Done());
 
 endmodule
