@@ -90,8 +90,8 @@ initial begin
 	#40 mii0_d = {type[0],type[1],type[2],type[3]};
 	#40 mii0_d = {type[4],type[5],type[6],type[7]};
 	//payload
-	for (i=0; i<32; i=i+1) begin
-		c = data[i];
+	for (i=30*8; i; i=i-8) begin
+		c = {data[i+7],data[i+6],data[i+5],data[i+4],data[i+3],data[i+2],data[i+1],data[i+0]};
 		#40 mii0_d = {c[0],c[1],c[2],c[3]};
 		#40 mii0_d = {c[4],c[5],c[6],c[7]};
 	end
