@@ -35,9 +35,9 @@ bitgen:
 
 program:
 	openocd \
-	-f /usr/share/openocd/scripts/interface/altera-usb-blaster.cfg \
-	-f /usr/share/openocd/scripts/cpld/xilinx-xc6s.cfg \
-	-c "init; xc6s_program xc6s.tap; pld load 0 ./synth/RGMIIulator_top.bit ; exit"
+	-f /usr/local/share/openocd/scripts/interface/altera-usb-blaster.cfg \
+	-f /usr/local/share/openocd/scripts/cpld/xilinx-xc6s.cfg \
+	-c "init; xc6s_program xc6s.tap; pld load 0 ./synth/MIIulatorTop.bit ; exit"
 
 clean:
 	rm *.vcd a.out
