@@ -1,10 +1,8 @@
 `timescale 1ns / 1ps
 
 module MIIcore (
-	input 		clk,
 	input 		reset,
 	output reg 	rdy = 0,
-	output reg 	error = 0,
 	output reg 	[7:0] d = 0,
 	// MII interface
 	input		mii_clk,

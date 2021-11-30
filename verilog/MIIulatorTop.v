@@ -22,7 +22,7 @@
 module MIIulatorTop(
 	input		clk,
 	input		SW0,
-	input		uart_rx,
+	input		uart_rx_serial,
 	output		uart_tx_serial,
 	output 		[7:0]LED,
 	input		mii0_en,
@@ -30,7 +30,9 @@ module MIIulatorTop(
 	input		[3:0]mii0_d
 );
 
+`ifdef __ICARUS__
 wire reset = 0;
+`endif
 wire rdy;
 reg rdy_i = 0; // rdy inhibit
 wire error = 0;
@@ -93,10 +95,8 @@ always @(posedge clk) begin
 end
 
 MIIcore MII0 (
-	.clk(clk),
 	.reset(reset),
 	.rdy(rdy),
-	.error(error),
 	.d(d),
 	// MII interface
 	.mii_clk(mii0_clk),

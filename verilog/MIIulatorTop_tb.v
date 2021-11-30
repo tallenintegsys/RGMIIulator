@@ -117,7 +117,7 @@ always #20 mii0_clk = !mii0_clk;
 MIIulatorTop uut(
 	.clk(clk),
 	.SW0(SW0),
-	.uart_rx(uart_rx),
+	.uart_rx_serial(uart_rx_serial),
 	.uart_tx_serial(uart_tx_serial),
 	.LED(LED),
 	.mii0_en(mii0_en),
