@@ -49,7 +49,7 @@ reg [7:0]c;
 
 task verify (input [7:0] [0:16] str, input [7:0] a, input [7:0] b);
 	if (a != b) begin
-		$display("***fail @ %d: %s   a=%b, b=%b", $time, str, a, b);
+		$display("***fail @ %d: %s   exp: %b, got: %b", $time, str, b, a);
 		#500
 		$finish;
 	end
@@ -80,28 +80,16 @@ initial begin
 	//dst
 	#40 mii_d = {dst[40],dst[41],dst[42],dst[43]};
 	#40 mii_d = {dst[44],dst[45],dst[46],dst[47]};
-	while (!rdy) #1;
-	verify("1st octet", d, 8'h54);
 	#40 mii_d = {dst[32],dst[33],dst[34],dst[35]};
 	#40 mii_d = {dst[36],dst[37],dst[38],dst[39]};
-	while (!rdy) #1;
-	verify("2nd octet", d, 8'hff);
 	#40 mii_d = {dst[24],dst[25],dst[26],dst[27]};
 	#40 mii_d = {dst[28],dst[29],dst[30],dst[31]};
-	while (!rdy) #1;
-	verify("3rd octet", d, 8'h01);
 	#40 mii_d = {dst[16],dst[17],dst[18],dst[19]};
 	#40 mii_d = {dst[20],dst[21],dst[22],dst[23]};
-	while (!rdy) #1;
-	verify("4th octet", d, 8'h21);
 	#40 mii_d = {dst[8],dst[9],dst[10],dst[11]};
 	#40 mii_d = {dst[12],dst[13],dst[14],dst[15]};
-	while (!rdy) #1;
-	verify("5th octet", d, 8'h23);
 	#40 mii_d = {dst[0],dst[1],dst[2],dst[3]};
 	#40 mii_d = {dst[4],dst[5],dst[6],dst[7]};
-	while (!rdy) #1;
-	verify("6th octet", d, 8'h24);
 	//src
 	#40 mii_d = {src[40],src[41],src[42],src[43]};
 	#40 mii_d = {src[44],src[45],src[46],src[47]};
@@ -147,9 +135,29 @@ initial begin
 		$display("j%d", j);
 		while (!rdy) #1;
 		verify("preamble", d, 8'b01010101);
+		while (rdy) #1;
 	end
 	while (!rdy) #1;
 	verify("SOF", d, 8'b11010101);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("1st octet", d, 8'h54);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("2nd octet", d, 8'hff);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("3rd octet", d, 8'h01);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("4th octet", d, 8'h21);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("5th octet", d, 8'h23);
+	while (rdy) #1;
+	while (!rdy) #1;
+	verify("6th octet", d, 8'h24);
+	while (rdy) #1;
 end
 
 always #10 clk = !clk;
