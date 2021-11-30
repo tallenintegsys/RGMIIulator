@@ -19,29 +19,31 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module RGMIIulator_top(
+module MIIulatorTop(
 	input		clk,
 	input		SW0,
 	input		uart_rx,
 	output		uart_tx,
 	output 		[7:0]LED,
-	input		rgm0_en,
-	input		rgm0_clk,
-	input		[3:0]rgm0_d
+	input		mii0_en,
+	input		mii0_clk,
+	input		[3:0]mii0_d
 );
 
-wire reset;
+wire reset = 0;
+wire rdy;
+reg rdy_i = 0; // rdy inhibit
+wire error = 0;
+wire [7:0] d;
+reg [7:0] uart_d = 0;
 reg uart_dv = 0;
-reg [7:0] uart_cout = 0;
 wire uart_active;
+reg [7:0] fifo [0:63];
+reg [5:0] inptr = 0;
+reg [5:0] outptr = 0;
 
-reg [7:0] FIFO [0:63];
-reg [5:0] fifoin = 0;
-reg [5:0] fifout = 0;
-reg nibble = 0;
 
 reg [7:0] hex [0:15];
-reg error = 0;
 
 assign reset = ~SW0;
 assign LED = {error};
@@ -65,31 +67,49 @@ initial begin
 	hex[4'hf] = "f";
 end
 
-uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
-	.i_Clock(clk),
-	.i_TX_DV(uart_dv),			// start sending the bits
-	.i_TX_Byte(uart_cout),		// char to send
-	.o_TX_Active(uart_active),
-	.o_TX_Serial(uart_tx),
-	.o_TX_Done());
 
 always @(posedge clk) begin
 	if (reset) begin
-		uart_dv <= 0;
-		fifout <= 0;
-		error <= 0;
+		rdy_i <= 0;
+		inptr <= 0;
+		outptr <= 0;
 	end else begin
-		uart_cout <= FIFO[fifout];
-		if (fifoin != fifout) begin
-			if (uart_active) begin
-				uart_dv <= 0;
-			end else begin
-				fifout <= fifout + 1;
-				uart_dv <= 1;
+		if (rdy) begin
+			if (!rdy_i) begin
+				fifo[inptr] <= d;
+				inptr <= inptr + 1;
+				rdy_i <= 1;
 			end
+		end else begin
+			if (!uart_active && !uart_dv && (inptr != outptr)) begin
+			uart_d <= fifo[outptr];
+			outptr <= outptr + 1;
+			uart_dv <= 1;
+		end else begin
+			uart_dv <= 0;
+		end
+			rdy_i <= 0;
 		end
 	end
 end
 
+MIIcore MII0 (
+	.clk(clk),
+	.reset(reset),
+	.rdy(rdy),
+	.error(error),
+	.d(d),
+	// MII interface
+	.mii_clk(mii0_clk),
+	.mii_en(mii0_en),
+	.mii_d(mii0_d));
+
+uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
+	.i_Clock(clk),
+	.i_TX_DV(uart_dv),			// start sending the bits
+	.i_TX_Byte(uart_d),		// char to send
+	.o_TX_Active(uart_active),
+	.o_TX_Serial(uart_tx),
+	.o_TX_Done());
 
 endmodule

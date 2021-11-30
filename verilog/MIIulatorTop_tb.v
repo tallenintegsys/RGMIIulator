@@ -24,18 +24,18 @@ reg		SW0				= 0;
 reg		uart_rx;
 wire	uart_tx			= 0;
 wire	[7:0]LED		= 8'b00000000;
-reg		rgm0_en			= 0;
-reg		rgm0_clk		= 0;
-reg		[0:3] rgm0_d	= 4'b0000;
+reg		mii0_en			= 0;
+reg		mii0_clk		= 0;
+reg		[0:3] mii0_d	= 4'b0000;
 wire		d3;
 wire		d2;
 wire		d1;
 wire		d0;
 
-assign	d3 = rgm0_d[3];
-assign	d2 = rgm0_d[2];
-assign	d1 = rgm0_d[1];
-assign	d0 = rgm0_d[0];
+assign	d3 = mii0_d[3];
+assign	d2 = mii0_d[2];
+assign	d1 = mii0_d[1];
+assign	d0 = mii0_d[0];
 
 localparam dst = 48'h54_ff_01_21_23_24;
 localparam src = 48'h12_34_56_78_9a_bc;
@@ -47,82 +47,90 @@ integer i;
 reg [7:0]c;
 
 initial begin
-	$dumpfile("RGMIIulator.vcd");
+	$dumpfile("MIIulatorTop.vcd");
 	$dumpvars(0, RGMIIulator_tb);
-	#0	SW0 = 0;
-	#5	SW0 = 1;
-	#10;
+	#0	SW0 = 0; // reset
+	#5	SW0 = 1; // reset
+	#20	SW0 = 0; // reset
+	#5;
 	//start of packet
-	rgm0_en = 1;
+	mii0_en = 1;
 	//preamble
-	for (i=0; i<15; i=i+1)
-		#40 rgm0_d = 4'b1010;
+	for (i=0; i<7; i=i+1) begin
+		$display("i%d", i);
+		mii0_d = 4'b1010;
+		#40;
+		mii0_d = 4'b1010;
+		#40;
+	end
 	//start of frame delimeter
-	#40 rgm0_d = 4'b1011;
+	mii0_d = 4'b1010;
+	#40;
+	mii0_d = 4'b1011;
 	//dst
-	#40 rgm0_d = {dst[40],dst[41],dst[42],dst[43]};
-	#40 rgm0_d = {dst[44],dst[45],dst[46],dst[47]};
-	#40 rgm0_d = {dst[32],dst[33],dst[34],dst[35]};
-	#40 rgm0_d = {dst[36],dst[37],dst[38],dst[39]};
-	#40 rgm0_d = {dst[24],dst[25],dst[26],dst[27]};
-	#40 rgm0_d = {dst[28],dst[29],dst[30],dst[31]};
-	#40 rgm0_d = {dst[16],dst[17],dst[18],dst[19]};
-	#40 rgm0_d = {dst[20],dst[21],dst[22],dst[23]};
-	#40 rgm0_d = {dst[8],dst[9],dst[10],dst[11]};
-	#40 rgm0_d = {dst[12],dst[13],dst[14],dst[15]};
-	#40 rgm0_d = {dst[0],dst[1],dst[2],dst[3]};
-	#40 rgm0_d = {dst[4],dst[5],dst[6],dst[7]};
+	#40 mii0_d = {dst[40],dst[41],dst[42],dst[43]};
+	#40 mii0_d = {dst[44],dst[45],dst[46],dst[47]};
+	#40 mii0_d = {dst[32],dst[33],dst[34],dst[35]};
+	#40 mii0_d = {dst[36],dst[37],dst[38],dst[39]};
+	#40 mii0_d = {dst[24],dst[25],dst[26],dst[27]};
+	#40 mii0_d = {dst[28],dst[29],dst[30],dst[31]};
+	#40 mii0_d = {dst[16],dst[17],dst[18],dst[19]};
+	#40 mii0_d = {dst[20],dst[21],dst[22],dst[23]};
+	#40 mii0_d = {dst[8],dst[9],dst[10],dst[11]};
+	#40 mii0_d = {dst[12],dst[13],dst[14],dst[15]};
+	#40 mii0_d = {dst[0],dst[1],dst[2],dst[3]};
+	#40 mii0_d = {dst[4],dst[5],dst[6],dst[7]};
 	//src
-	#40 rgm0_d = {src[40],src[41],src[42],src[43]};
-	#41 rgm0_d = {src[44],src[45],src[46],src[47]};
-	#40 rgm0_d = {src[32],src[33],src[34],src[35]};
-	#40 rgm0_d = {src[36],src[37],src[38],src[39]};
-	#40 rgm0_d = {src[24],src[25],src[26],src[27]};
-	#40 rgm0_d = {src[28],src[29],src[30],src[31]};
-	#40 rgm0_d = {src[16],src[17],src[18],src[19]};
-	#40 rgm0_d = {src[20],src[21],src[22],src[23]};
-	#40 rgm0_d = {src[8],src[9],src[10],src[11]};
-	#40 rgm0_d = {src[12],src[13],src[14],src[15]};
-	#40 rgm0_d = {src[0],src[1],src[2],src[3]};
-	#40 rgm0_d = {src[4],src[5],src[6],src[7]};
+	#40 mii0_d = {src[40],src[41],src[42],src[43]};
+	#41 mii0_d = {src[44],src[45],src[46],src[47]};
+	#40 mii0_d = {src[32],src[33],src[34],src[35]};
+	#40 mii0_d = {src[36],src[37],src[38],src[39]};
+	#40 mii0_d = {src[24],src[25],src[26],src[27]};
+	#40 mii0_d = {src[28],src[29],src[30],src[31]};
+	#40 mii0_d = {src[16],src[17],src[18],src[19]};
+	#40 mii0_d = {src[20],src[21],src[22],src[23]};
+	#40 mii0_d = {src[8],src[9],src[10],src[11]};
+	#40 mii0_d = {src[12],src[13],src[14],src[15]};
+	#40 mii0_d = {src[0],src[1],src[2],src[3]};
+	#40 mii0_d = {src[4],src[5],src[6],src[7]};
 	//type
-	#40 rgm0_d = {type[8],type[9],type[10],type[11]};
-	#40 rgm0_d = {type[12],type[13],type[14],type[15]};
-	#40 rgm0_d = {type[0],type[1],type[2],type[3]};
-	#40 rgm0_d = {type[4],type[5],type[6],type[7]};
+	#40 mii0_d = {type[8],type[9],type[10],type[11]};
+	#40 mii0_d = {type[12],type[13],type[14],type[15]};
+	#40 mii0_d = {type[0],type[1],type[2],type[3]};
+	#40 mii0_d = {type[4],type[5],type[6],type[7]};
 	//payload
 	for (i=0; i<32; i=i+1) begin
 		c = data[i];
-		#40 rgm0_d = {c[0],c[1],c[2],c[3]};
-		#40 rgm0_d = {c[4],c[5],c[6],c[7]};
+		#40 mii0_d = {c[0],c[1],c[2],c[3]};
+		#40 mii0_d = {c[4],c[5],c[6],c[7]};
 	end
 	//crc
-	#40 rgm0_d = {crc[24],crc[25],crc[26],crc[27]};
-	#40 rgm0_d = {crc[28],crc[29],crc[30],crc[31]};
-	#40 rgm0_d = {crc[16],crc[17],crc[18],crc[19]};
-	#40 rgm0_d = {crc[20],crc[21],crc[22],crc[23]};
-	#40 rgm0_d = {crc[8],crc[9],crc[10],crc[11]};
-	#40 rgm0_d = {crc[12],crc[13],crc[14],crc[15]};
-	#40 rgm0_d = {crc[0],crc[1],crc[2],crc[3]};
-	#40 rgm0_d = {crc[4],crc[5],crc[6],crc[7]};
+	#40 mii0_d = {crc[24],crc[25],crc[26],crc[27]};
+	#40 mii0_d = {crc[28],crc[29],crc[30],crc[31]};
+	#40 mii0_d = {crc[16],crc[17],crc[18],crc[19]};
+	#40 mii0_d = {crc[20],crc[21],crc[22],crc[23]};
+	#40 mii0_d = {crc[8],crc[9],crc[10],crc[11]};
+	#40 mii0_d = {crc[12],crc[13],crc[14],crc[15]};
+	#40 mii0_d = {crc[0],crc[1],crc[2],crc[3]};
+	#40 mii0_d = {crc[4],crc[5],crc[6],crc[7]};
 	//end of packet
-	rgm0_en = 0;
+	mii0_en = 0;
 	//we're done
-	#500000	$finish;
+	#5000000	$finish;
 end
 
 always #10 clk = !clk;
-always #20 rgm0_clk = !rgm0_clk;
+always #20 mii0_clk = !mii0_clk;
 
 
-RGMIIulator_top uut(
+MIIulatorTop uut(
 	.clk(clk),
 	.SW0(SW0),
 	.uart_rx(uart_rx),
 	.uart_tx(uart_tx),
 	.LED(LED),
-	.rgm0_en(rgm0_en),
-	.rgm0_clk(rgm0_clk),
-	.rgm0_d(rgm0_d)
+	.mii0_en(mii0_en),
+	.mii0_clk(mii0_clk),
+	.mii0_d(mii0_d)
 );
 endmodule
