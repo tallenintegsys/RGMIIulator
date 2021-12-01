@@ -40,34 +40,12 @@ wire [7:0] d;
 reg [7:0] uart_d = 0;
 reg uart_dv = 0;
 wire uart_active;
-reg [7:0] fifo [0:63];
-reg [5:0] inptr = 0;
-reg [5:0] outptr = 0;
-
-reg [7:0] hex [0:15];
+reg [7:0] fifo [0:127];
+reg [7:0] inptr = 0;
+reg [7:0] outptr = 0;
 
 assign reset = ~SW0;
 assign LED = {error};
-
-initial begin
-	hex[4'h0] = "0";
-	hex[4'h1] = "1";
-	hex[4'h2] = "2";
-	hex[4'h3] = "3";
-	hex[4'h4] = "4";
-	hex[4'h5] = "5";
-	hex[4'h6] = "6";
-	hex[4'h7] = "7";
-	hex[4'h8] = "8";
-	hex[4'h9] = "9";
-	hex[4'ha] = "a";
-	hex[4'hb] = "b";
-	hex[4'hc] = "c";
-	hex[4'hd] = "d";
-	hex[4'he] = "e";
-	hex[4'hf] = "f";
-end
-
 
 always @(posedge clk) begin
 	if (reset) begin
@@ -103,7 +81,7 @@ MIIcore MII0 (
 	.mii_en(mii0_en),
 	.mii_d(mii0_d));
 
-uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
+uart_tx #(.CLKS_PER_BIT((100000000)/1200)) uart_tx_0 (
 	.i_Clock(clk),
 	.i_TX_DV(uart_dv),			// start sending the bits
 	.i_TX_Byte(uart_d),		// char to send
