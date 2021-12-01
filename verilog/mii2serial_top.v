@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module MIIulatorTop(
+module mii2serial_top (
 	input		clk,
 	input		SW0,
 	input		uart_rx_serial,
@@ -33,10 +33,9 @@ module MIIulatorTop(
 `ifdef __ICARUS__
 wire reset = 0;
 `endif
-wire rdy;
+wire mii0_rdy;
 reg rdy_i = 0; // rdy inhibit
-wire error = 0;
-wire [7:0] d;
+wire [7:0] mii0_q;
 reg [7:0] uart_d = 0;
 reg uart_dv = 0;
 wire uart_active;
@@ -45,7 +44,6 @@ reg [7:0] inptr = 0;
 reg [7:0] outptr = 0;
 
 assign reset = ~SW0;
-assign LED = {error};
 
 always @(posedge clk) begin
 	if (reset) begin
@@ -53,9 +51,9 @@ always @(posedge clk) begin
 		inptr <= 0;
 		outptr <= 0;
 	end else begin
-		if (rdy) begin
+		if (mii0_rdy) begin
 			if (!rdy_i) begin
-				fifo[inptr] <= d;
+				fifo[inptr] <= mii0_q;
 				inptr <= inptr + 1;
 				rdy_i <= 1;
 			end
@@ -72,10 +70,10 @@ always @(posedge clk) begin
 	end
 end
 
-MIIcore MII0 (
+mii MII0 (
 	.reset(reset),
-	.rdy(rdy),
-	.d(d),
+	.rdy(mii0_rdy),
+	.q(mii0_q),
 	// MII interface
 	.mii_clk(mii0_clk),
 	.mii_en(mii0_en),

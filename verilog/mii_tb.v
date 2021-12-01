@@ -26,7 +26,7 @@ reg	mii_clk			= 0;
 reg	[0:3] mii_d		= 4'b0000;
 reg reset;
 wire rdy;
-wire [7:0]d;
+wire [7:0]q;
 
 localparam dst = 48'h54_ff_01_21_23_24;
 localparam src = 48'h12_34_56_78_9a_bc;
@@ -122,29 +122,29 @@ initial begin
 	$display("begin");
 	for (j=0; j<7; j=j+1) begin
 		while (!rdy) #1;
-		verify("preamble", d, 8'b10101010);
+		verify("preamble", q, 8'b10101010);
 		while (rdy) #1;
 	end
 	while (!rdy) #1;
-	verify("SOF", d, 8'b10111010);
+	verify("SOF", q, 8'b10111010);
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("1st octet", d, {dst[44],dst[45],dst[46],dst[47],dst[40],dst[41],dst[42],dst[43]});
+	verify("1st octet", q, {dst[44],dst[45],dst[46],dst[47],dst[40],dst[41],dst[42],dst[43]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("2nd octet", d, {dst[36],dst[37],dst[38],dst[39],dst[32],dst[33],dst[34],dst[35]});
+	verify("2nd octet", q, {dst[36],dst[37],dst[38],dst[39],dst[32],dst[33],dst[34],dst[35]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("3rd octet", d, {dst[28],dst[29],dst[30],dst[31],dst[24],dst[25],dst[26],dst[27]});
+	verify("3rd octet", q, {dst[28],dst[29],dst[30],dst[31],dst[24],dst[25],dst[26],dst[27]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("4th octet", d, {dst[20],dst[21],dst[22],dst[23],dst[16],dst[17],dst[18],dst[19]});
+	verify("4th octet", q, {dst[20],dst[21],dst[22],dst[23],dst[16],dst[17],dst[18],dst[19]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("5th octet", d, {dst[12],dst[13],dst[14],dst[15],dst[8],dst[9],dst[10],dst[11]});
+	verify("5th octet", q, {dst[12],dst[13],dst[14],dst[15],dst[8],dst[9],dst[10],dst[11]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("6th octet", d, {dst[4],dst[5],dst[6],dst[7],dst[0],dst[1],dst[2],dst[3]});
+	verify("6th octet", q, {dst[4],dst[5],dst[6],dst[7],dst[0],dst[1],dst[2],dst[3]});
 	while (rdy) #1;
 end
 
@@ -152,10 +152,10 @@ always #10 clk = !clk;
 always #20 mii_clk = !mii_clk;
 
 
-MIIcore UUT (
+mii UUT (
 	.reset(reset),
 	.rdy(rdy),
-	.d(d),
+	.q(q),
 	.mii_clk(mii_clk),
 	.mii_en(mii_en),
 	.mii_d(mii_d));

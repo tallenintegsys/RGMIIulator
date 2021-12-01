@@ -18,7 +18,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 `timescale 1ns / 1ps
-module RGMIIulator_tb;
+module mii2serial_top_tb;
 reg		clk				= 0;
 reg		SW0				= 0;
 reg		uart_rx_serial;
@@ -38,8 +38,8 @@ integer i;
 reg [7:0]c;
 
 initial begin
-	$dumpfile("MIIulatorTop.vcd");
-	$dumpvars(0, RGMIIulator_tb);
+	$dumpfile("mii2serial_top.vcd");
+	$dumpvars(0, mii2serial_top_tb);
 	#0	SW0 = 0; // reset
 	#5	SW0 = 1; // reset
 	#20	SW0 = 0; // reset
@@ -48,7 +48,6 @@ initial begin
 	mii0_en = 1;
 	//preamble
 	for (i=0; i<7; i=i+1) begin
-		$display("i%d", i);
 		mii0_d = 4'b1010;
 		#40;
 		mii0_d = 4'b1010;
@@ -114,7 +113,7 @@ always #10 clk = !clk;
 always #20 mii0_clk = !mii0_clk;
 
 
-MIIulatorTop uut(
+mii2serial_top uut(
 	.clk(clk),
 	.SW0(SW0),
 	.uart_rx_serial(uart_rx_serial),
