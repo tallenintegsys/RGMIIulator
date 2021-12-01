@@ -1,12 +1,12 @@
 VFLAGS= -Wall -g2005
 
-
-MIIulator: verilog/MIIulatorTop_tb.v verilog/MIIulatorTop.v verilog/MIIcore.v verilog/uart_tx.v
+MIIcore: verilog/MIIcore_tb.v verilog/MIIcore.v
 	iverilog $(VFLAGS) -Iverilog -o $@ $^
 	@./$@
 	@rm $@
 
-MIIcore: verilog/MIIcore_tb.v verilog/MIIcore.v
+
+MIIulator: verilog/MIIulatorTop_tb.v verilog/MIIulatorTop.v verilog/MIIcore.v verilog/uart_tx.v
 	iverilog $(VFLAGS) -Iverilog -o $@ $^
 	@./$@
 	@rm $@

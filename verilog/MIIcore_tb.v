@@ -25,18 +25,8 @@ reg	mii_en			= 0;
 reg	mii_clk			= 0;
 reg	[0:3] mii_d		= 4'b0000;
 reg reset;
-wire error;
 wire rdy;
 wire [7:0]d;
-wire d3;
-wire d2;
-wire d1;
-wire d0;
-
-assign	d3 = mii_d[3];
-assign	d2 = mii_d[2];
-assign	d1 = mii_d[1];
-assign	d0 = mii_d[0];
 
 localparam dst = 48'h54_ff_01_21_23_24;
 localparam src = 48'h12_34_56_78_9a_bc;
@@ -66,7 +56,6 @@ initial begin
 	mii_en = 1;
 	//preamble
 	for (i=0; i<7; i=i+1) begin
-		$display("i%d", i);
 		mii_d = 4'b1010;
 		#40;
 		mii_d = 4'b1010;
@@ -132,31 +121,30 @@ end
 initial begin
 	$display("begin");
 	for (j=0; j<7; j=j+1) begin
-		$display("j%d", j);
 		while (!rdy) #1;
-		verify("preamble", d, 8'b01010101);
+		verify("preamble", d, 8'b10101010);
 		while (rdy) #1;
 	end
 	while (!rdy) #1;
-	verify("SOF", d, 8'b11010101);
+	verify("SOF", d, 8'b10111010);
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("1st octet", d, 8'h54);
+	verify("1st octet", d, {dst[44],dst[45],dst[46],dst[47],dst[40],dst[41],dst[42],dst[43]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("2nd octet", d, 8'hff);
+	verify("2nd octet", d, {dst[36],dst[37],dst[38],dst[39],dst[32],dst[33],dst[34],dst[35]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("3rd octet", d, 8'h01);
+	verify("3rd octet", d, {dst[28],dst[29],dst[30],dst[31],dst[24],dst[25],dst[26],dst[27]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("4th octet", d, 8'h21);
+	verify("4th octet", d, {dst[20],dst[21],dst[22],dst[23],dst[16],dst[17],dst[18],dst[19]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("5th octet", d, 8'h23);
+	verify("5th octet", d, {dst[12],dst[13],dst[14],dst[15],dst[8],dst[9],dst[10],dst[11]});
 	while (rdy) #1;
 	while (!rdy) #1;
-	verify("6th octet", d, 8'h24);
+	verify("6th octet", d, {dst[4],dst[5],dst[6],dst[7],dst[0],dst[1],dst[2],dst[3]});
 	while (rdy) #1;
 end
 
@@ -165,10 +153,8 @@ always #20 mii_clk = !mii_clk;
 
 
 MIIcore UUT (
-	.clk(clk),
 	.reset(reset),
 	.rdy(rdy),
-	.error(error),
 	.d(d),
 	.mii_clk(mii_clk),
 	.mii_en(mii_en),
