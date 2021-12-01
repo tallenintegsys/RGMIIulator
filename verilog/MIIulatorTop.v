@@ -81,7 +81,7 @@ MIIcore MII0 (
 	.mii_en(mii0_en),
 	.mii_d(mii0_d));
 
-uart_tx #(.CLKS_PER_BIT((100000000)/1200)) uart_tx_0 (
+uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
 	.i_Clock(clk),
 	.i_TX_DV(uart_dv),			// start sending the bits
 	.i_TX_Byte(uart_d),		// char to send
