@@ -18,7 +18,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 `timescale 1ns / 1ps
-module MIIcore_tb;
+module mii_tb;
 
 reg	clk				= 0;
 reg	mii_en			= 0;
@@ -46,8 +46,8 @@ task verify (input [7:0] [0:16] str, input [7:0] a, input [7:0] b);
 endtask
 
 initial begin
-	$dumpfile("MIIcore.vcd");
-	$dumpvars(0, MIIcore_tb);
+	$dumpfile("mii.vcd");
+	$dumpvars(0, mii_tb);
 	#0	reset = 0;
 	#5	reset = 1;
 	#20	reset = 0;

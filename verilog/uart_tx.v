@@ -10,9 +10,9 @@
 // CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
 // Example: 25 MHz Clock, 115200 baud UART
 // (25000000)/(115200) = 217
-`timescale 1ns / 1ps
 `ifndef UART_TX_H
 `define UART_TX_H
+`timescale 1ns / 1ps
 
 module uart_tx #(parameter CLKS_PER_BIT = 217) (
 	input       i_Clock,

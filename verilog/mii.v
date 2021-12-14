@@ -1,6 +1,6 @@
-`timescale 1ns / 1ps
 `ifndef MII_H
 `define MII_H
+`timescale 1ns / 1ps
 
 
 module mii (

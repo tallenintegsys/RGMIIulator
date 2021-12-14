@@ -39,8 +39,8 @@ program:
 	openocd \
 	-f /usr/local/share/openocd/scripts/interface/altera-usb-blaster.cfg \
 	-f /usr/local/share/openocd/scripts/cpld/xilinx-xc6s.cfg \
-	-c "init; xc6s_program xc6s.tap; pld load 0 ./synth/MIIulatorTop.bit ; exit"
+	-c "init; xc6s_program xc6s.tap; pld load 0 synth/mii2serial_top.bit; exit"
 
 clean:
-	rm *.vcd a.out
+	rm -rf *.vcd a.out
 

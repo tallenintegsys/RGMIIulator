@@ -17,9 +17,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-`timescale 1ns / 1ps
 `include "mii.v"
 `include "uart_tx.v"
+`timescale 1ns / 1ps
 
 module mii2serial_top (
 	input		clk,
