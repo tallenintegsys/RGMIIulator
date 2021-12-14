@@ -1,4 +1,7 @@
 `timescale 1ns / 1ps
+`ifndef MII_H
+`define MII_H
+
 
 module mii (
 	input 		reset,
@@ -40,3 +43,5 @@ always @(posedge mii_clk) begin
 	end // reset
 end // always
 endmodule
+
+`endif
