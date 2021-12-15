@@ -26,7 +26,7 @@ module mii2serial_top (
 	input		SW0,
 	input		uart_rx_serial,
 	output		uart_tx_serial,
-	output 		[7:0]LED,
+	output 		[0:0]LED,
 	input		mii0_en,
 	input		mii0_clk,
 	input		[3:0]mii0_d
@@ -46,6 +46,7 @@ reg [7:0] inptr = 0;
 reg [7:0] outptr = 0;
 
 assign reset = ~SW0;
+assign LED[0] = uart_active;
 
 always @(posedge clk) begin
 	if (reset) begin
@@ -56,13 +57,13 @@ always @(posedge clk) begin
 		if (mii0_rdy) begin
 			if (!rdy_i) begin
 				fifo[inptr] <= mii0_q;
-				inptr <= inptr + 1;
+				inptr <= inptr + 8'd1;
 				rdy_i <= 1;
 			end
 		end else begin
 			if (!uart_active && !uart_dv && (inptr != outptr)) begin
 			uart_d <= fifo[outptr];
-			outptr <= outptr + 1;
+			outptr <= outptr + 8'd1;
 			uart_dv <= 1;
 		end else begin
 			uart_dv <= 0;

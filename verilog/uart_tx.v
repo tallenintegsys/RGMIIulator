@@ -30,7 +30,7 @@ localparam TX_STOP_BIT	= 3'b011;
 localparam CLEANUP		= 3'b100;
 
 reg [2:0]	r_SM_Main		= 0;
-reg [31:0]	r_Clock_Count	= 0;
+reg [9:0]	r_Clock_Count	= 0;
 reg [2:0]	r_Bit_Index		= 0;
 reg [7:0]	r_TX_Data		= 0;
 reg			r_TX_Done		= 0;
@@ -58,7 +58,7 @@ always @(posedge i_Clock) begin
 			// Wait CLKS_PER_BIT-1 clock cycles for start bit to finish
 			if (r_Clock_Count < CLKS_PER_BIT-1)
 			begin
-				r_Clock_Count <= r_Clock_Count + 8'd1;
+				r_Clock_Count <= r_Clock_Count + 9'd1;
 				r_SM_Main <= TX_START_BIT;
 			end
 			else
@@ -72,7 +72,7 @@ always @(posedge i_Clock) begin
 		TX_DATA_BITS : begin			// Wait CLKS_PER_BIT-1 clock cycles for data bits to finish         
 			o_TX_Serial <= r_TX_Data[r_Bit_Index];
 			if (r_Clock_Count < CLKS_PER_BIT-1) begin
-				r_Clock_Count <= r_Clock_Count + 8'd1;
+				r_Clock_Count <= r_Clock_Count + 9'd1;
 				r_SM_Main <= TX_DATA_BITS;
 			end else begin
 				r_Clock_Count <= 0;
@@ -92,7 +92,7 @@ always @(posedge i_Clock) begin
 
 			// Wait CLKS_PER_BIT-1 clock cycles for Stop bit to finish
 			if (r_Clock_Count < CLKS_PER_BIT-1) begin
-				r_Clock_Count <= r_Clock_Count + 8'd1;
+				r_Clock_Count <= r_Clock_Count + 9'd1;
 				r_SM_Main <= TX_STOP_BIT;
 			end else begin
 				r_TX_Done		<= 1'b1;

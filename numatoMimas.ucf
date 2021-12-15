@@ -15,10 +15,10 @@ TIMESPEC TS_clk = PERIOD "clk" 100 MHz HIGH 50 %;
 ###################################################################################################################################################
 #                                                 LEDs                                                                                            #
 ###################################################################################################################################################
-#NET "LED[0]" LOC = P119;
-#NET "LED[0]" IOSTANDARD = LVCMOS33;
-#NET "LED[0]" DRIVE = 8;
-#NET "LED[0]" SLEW = FAST;
+NET "LED[0]" LOC = P119;
+NET "LED[0]" IOSTANDARD = LVCMOS33;
+NET "LED[0]" DRIVE = 8;
+NET "LED[0]" SLEW = FAST;
 #NET "LED[1]" LOC = P118;
 #NET "LED[1]" IOSTANDARD = LVCMOS33;
 #NET "LED[1]" DRIVE = 8;
