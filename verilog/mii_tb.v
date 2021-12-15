@@ -21,7 +21,6 @@
 module mii_tb;
 
 reg	clk				= 0;
-reg	mii_en			= 0;
 reg	mii_clk			= 0;
 reg	[0:3] mii_d		= 4'b0000;
 reg reset;
@@ -53,7 +52,6 @@ initial begin
 	#20	reset = 0;
 	#5;
 	//start of packet
-	mii_en = 1;
 	//preamble
 	for (i=0; i<7; i=i+1) begin
 		mii_d = 4'b1010;
@@ -113,9 +111,14 @@ initial begin
 	#40 mii_d = {crc[0],crc[1],crc[2],crc[3]};
 	#40 mii_d = {crc[4],crc[5],crc[6],crc[7]};
 	//end of packet
-	mii_en = 0;
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
+	#40 mii_d = {1'd0,1'd0,1'd0,1'd0};
 	//we're done
-	#50000	$finish;
+	#500	$finish;
 end
 
 initial begin
@@ -157,7 +160,6 @@ mii UUT (
 	.rdy(rdy),
 	.q(q),
 	.mii_clk(mii_clk),
-	.mii_en(mii_en),
 	.mii_d(mii_d));
 
 endmodule

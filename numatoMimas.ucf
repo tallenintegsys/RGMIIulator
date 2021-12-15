@@ -71,10 +71,10 @@ NET "uart_tx_serial" IOSTANDARD = LVCMOS33;
 NET "uart_tx_serial" DRIVE = 8;
 NET "uart_tx_serial" SLEW = FAST;
 
-NET "mii0_en" LOC = P139;
-NET "mii0_en" IOSTANDARD = LVCMOS33;
-NET "mii0_en" DRIVE = 8;
-NET "mii0_en" SLEW = FAST;
+#NET "mii0_en" LOC = P139;
+#NET "mii0_en" IOSTANDARD = LVCMOS33;
+#NET "mii0_en" DRIVE = 8;
+#NET "mii0_en" SLEW = FAST;
 
 NET "mii0_d[0]" LOC = P140;
 NET "mii0_d[0]" IOSTANDARD = LVCMOS33;

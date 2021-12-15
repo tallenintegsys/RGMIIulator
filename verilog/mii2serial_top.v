@@ -27,7 +27,6 @@ module mii2serial_top (
 	input		uart_rx_serial,
 	output		uart_tx_serial,
 	output 		[0:0]LED,
-	input		mii0_en,
 	input		mii0_clk,
 	input		[3:0]mii0_d
 );
@@ -79,7 +78,6 @@ mii MII0 (
 	.q(mii0_q),
 	// MII interface
 	.mii_clk(mii0_clk),
-	.mii_en(mii0_en),
 	.mii_d(mii0_d));
 
 uart_tx #(.CLKS_PER_BIT((100000000)/115200)) uart_tx_0 (
