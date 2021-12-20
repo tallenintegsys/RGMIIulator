@@ -12,14 +12,14 @@ module mii (
 	input		[3:0]mii_d);
 
 reg		nibble = 0;
-reg		[2:0] idle_count = 0;
-reg		mii_en = 0;
+wire	mii_en;
+
+assign mii_en = mii_d[0] | mii_d[1] | mii_d[2] | mii_d[3];
 
 always @(posedge mii_clk) begin
 	if (reset) begin
 		rdy <= 0;
 		nibble <= 0;
-		idle_count <= 0;
 	end else begin
 		if (rdy)
 			rdy <= 0;
@@ -34,24 +34,11 @@ always @(posedge mii_clk) begin
 			q[1] <= mii_d[1];
 			q[2] <= mii_d[2];
 			q[3] <= mii_d[3];
-			//d <= r;
 		end
-
-		if (mii_d == 4'h0) begin
-			if (idle_count < 5) begin
-				idle_count <= idle_count + 1;
-			end else begin
-				mii_en <= 0;
-				nibble <= 0;
-			end
-		end else begin
-			idle_count <= 0;
-			mii_en <= 1;
-			nibble <= 1;
-		end
-
 		if (mii_en) begin
 			nibble <= !nibble;
+		end else begin
+			nibble <= 0;
 		end
 	end // reset
 end // always
