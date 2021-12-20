@@ -12,7 +12,6 @@ module mii (
 	input 		mii_en,
 	input		[3:0]mii_d);
 
-reg		[7:0]r = 8'd0;
 reg		nibble = 0;
 
 always @(posedge mii_clk) begin
@@ -33,7 +32,6 @@ always @(posedge mii_clk) begin
 			q[1] <= mii_d[1];
 			q[2] <= mii_d[2];
 			q[3] <= mii_d[3];
-			//d <= r;
 		end
 		if (mii_en) begin
 			nibble <= !nibble;
