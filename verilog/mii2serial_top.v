@@ -25,7 +25,7 @@ module mii2serial_top (
 	input		clk,
 	input		SW0,
 	input		uart_rx_serial,
-	output		uart_tx,
+	output		uart_tx_serial,
 	output 		[0:0]LED,
 	input		mii0_en,
 	input		mii0_clk,
@@ -47,7 +47,6 @@ reg [7:0] outptr = 0;
 
 assign reset = ~SW0;
 assign LED[0] = uart_active;
-assign uart_tx = uart_tx_serial;
 
 always @(posedge clk) begin
 	if (reset) begin
